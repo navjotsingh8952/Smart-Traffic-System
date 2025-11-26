@@ -3,8 +3,9 @@ import time
 
 import RPi.GPIO as GPIO
 import cv2
-from lcd_i2c import LCD
 from ultralytics import YOLO
+
+from lcd_i2c import LCD
 
 GPIO.setmode(GPIO.BCM)
 
@@ -107,6 +108,7 @@ if __name__ == "__main__":
     cam_id = args.cam
     cap = None
     if cam_id is not None:
+        print("Initialized video")
         cap = cv2.VideoCapture(cam_id)
 
     try:
