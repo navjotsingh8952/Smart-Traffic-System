@@ -29,7 +29,6 @@ VEHICLE_CLASSES = ["car", "truck", "bike", "rickshaw", "bus"]
 def get_counts(cap):
     ret, frame = cap.read()
     if not ret:
-        print(0, False)
         return 0, False
 
     results = model.predict(frame, conf=CONF)
