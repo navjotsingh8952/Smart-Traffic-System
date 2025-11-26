@@ -1,3 +1,4 @@
+import argparse
 import time
 
 import RPi.GPIO as GPIO
@@ -20,14 +21,13 @@ lcd = LCD()
 
 # ---------- YOLO ----------
 model = YOLO("model/best.pt")
-cam = cv2.VideoCapture(0)
 CONF = 0.45
 VEHICLE_CLASSES = ["car", "truck", "bike", "rickshaw", "bus"]
 
 
 # ✔ ONE function to get BOTH car count + ambulance detection
-def get_counts():
-    ret, frame = cam.read()
+def get_counts(cap):
+    ret, frame = cap.read()
     if not ret:
         return 0, False
 
@@ -71,8 +71,11 @@ def calculate_green_time(car_count, ambulance):
         return 50
 
 
-def side_A_cycle():
-    car_count, ambulance = get_counts()
+def side_A_cycle(cap):
+    car_count = 0
+    ambulance = False
+    if cap is not None:
+        car_count, ambulance = get_counts(cap)
     green = calculate_green_time(car_count, ambulance)
 
     GPIO.output(A_GREEN, 1)
@@ -103,12 +106,22 @@ def side_B_cycle():
     GPIO.output(B_RED, 1)
 
 
-try:
-    while True:
-        side_A_cycle()
-        side_B_cycle()
+if __name__ == "__main__":
+    parser = argparse.ArgumentParser()
+    parser.add_argument("--cam", type=str, help="Camera ID")
+    args = parser.parse_args()
+    cam_id = args.cam
+    cap = None
+    if cam_id is not None:
+        cap = cv2.VideoCapture(cam_id)
 
-except KeyboardInterrupt:
-    lcd.clear()
-    GPIO.cleanup()
-    print("Program ended.")
+    try:
+        while True:
+            side_A_cycle(cap)
+            side_B_cycle()
+
+    except KeyboardInterrupt:
+        lcd.clear()
+        GPIO.cleanup()
+        cap.release()
+        print("Program ended.")
