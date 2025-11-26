@@ -41,13 +41,16 @@ def process_camera(model, cam_id):
     if not cap.isOpened():
         print("❌ Could not open webcam:", cam_id)
         return
+    frame_count = 0
 
     while True:
         ret, frame = cap.read()
         if not ret:
             print("❌ Failed to grab frame")
             break
-
+        frame_count += 1
+        if frame_count % 2 != 0:  # Only run YOLO every 2 frames
+            continue
         results = model.predict(frame, conf=CONF)
         annotated = results[0].plot()
 
