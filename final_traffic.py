@@ -1,9 +1,6 @@
-import argparse
 import time
 
 import RPi.GPIO as GPIO
-import cv2
-from ultralytics import YOLO
 
 from lcd_i2c import LCD
 
@@ -18,38 +15,6 @@ for p in [A_RED, A_GREEN]:
 
 # ---------- LCD ----------
 lcd = LCD()
-
-# ---------- YOLO ----------
-model = YOLO("model/best.pt")
-CONF = 0.45
-VEHICLE_CLASSES = ["car", "truck", "bike", "rickshaw", "bus"]
-
-
-# ✔ ONE function to get BOTH car count + ambulance detection
-def get_counts(cap):
-    ret, frame = cap.read()
-    if not ret:
-        return 0, False
-
-    results = model.predict(frame, conf=CONF)
-
-    vehicle_count = 0
-    ambulance = False
-
-    for r in results:
-        for box in r.boxes:
-            if float(box.conf) < 0.7:
-                continue
-
-            cls_id = int(box.cls)
-            class_name = r.names[cls_id]
-            if class_name == "emergency":
-                ambulance = True
-
-            if class_name in [VEHICLE_CLASSES]:
-                vehicle_count += 1
-    print(f"Vehicle: {vehicle_count}, Ambulance: {ambulance}")
-    return vehicle_count, ambulance
 
 
 def show_lcd(side, color, sec):
@@ -72,11 +37,40 @@ def calculate_green_time(car_count, ambulance):
         return 50
 
 
-def side_A_cycle(cap):
-    car_count = 0
-    ambulance = False
-    if cap is not None:
-        car_count, ambulance = get_counts(cap)
+def get_counts():
+    log_file = "detection_log.txt"
+
+    try:
+        # Read the last non-empty line
+        with open(log_file, "r") as f:
+            lines = [line.strip() for line in f.readlines() if line.strip()]
+
+        if not lines:
+            return 0, False
+
+        last = lines[-1]  # example: "2025-11-27 03:45:22 | Vehicle: 11 | Ambulance: True"
+
+        # --- Parse vehicle count ---
+        parts = last.split("|")
+        vehicle_part = parts[1].strip()  # "Vehicle: 11"
+        ambulance_part = parts[2].strip()  # "Ambulance: True"
+
+        vehicle_count = int(vehicle_part.split(":")[1].strip())
+        ambulance = ambulance_part.split(":")[1].strip().lower() == "true"
+
+        return vehicle_count, ambulance
+
+    except FileNotFoundError:
+        # If no log file exists yet
+        return 0, False
+
+    except Exception as e:
+        print("Error reading log:", e)
+        return 0, False
+
+
+def side_A_cycle():
+    car_count, ambulance = get_counts()
     green = calculate_green_time(car_count, ambulance)
 
     GPIO.output(A_GREEN, 1)
@@ -102,22 +96,13 @@ def side_B_cycle():
 
 
 if __name__ == "__main__":
-    parser = argparse.ArgumentParser()
-    parser.add_argument("--cam", type=str, help="Camera ID")
-    args = parser.parse_args()
-    cam_id = args.cam
-    cap = None
-    if cam_id is not None:
-        print("Initialized video")
-        cap = cv2.VideoCapture(cam_id)
 
     try:
         while True:
-            side_A_cycle(cap)
+            side_A_cycle()
             side_B_cycle()
 
     except KeyboardInterrupt:
         lcd.clear()
         GPIO.cleanup()
-        cap.release()
         print("Program ended.")
