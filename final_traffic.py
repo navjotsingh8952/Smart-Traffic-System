@@ -8,10 +8,10 @@ from ultralytics import YOLO
 GPIO.setmode(GPIO.BCM)
 
 # ---------- LED PINS ----------
-A_RED, A_YELLOW, A_GREEN = 2, 3, 4
-B_RED, B_YELLOW, B_GREEN = 17, 27, 22
+A_RED, A_GREEN = 2, 4
+B_RED, B_GREEN = 17, 22
 
-for p in [A_RED, A_YELLOW, A_GREEN, B_RED, B_YELLOW, B_GREEN]:
+for p in [A_RED, A_GREEN, B_RED, B_GREEN]:
     GPIO.setup(p, GPIO.OUT)
     GPIO.output(p, 0)
 
@@ -77,36 +77,29 @@ def side_A_cycle():
 
     GPIO.output(A_GREEN, 1)
     GPIO.output(B_RED, 1)
+    GPIO.output(A_RED, 0)
 
     for t in reversed(range(green)):
         show_lcd("SIDE A", "GREEN", t)
         time.sleep(1)
 
     GPIO.output(A_GREEN, 0)
-    GPIO.output(A_YELLOW, 1)
-    show_lcd("SIDE A", "YELLOW", 3)
-    time.sleep(3)
-    GPIO.output(A_YELLOW, 0)
     GPIO.output(A_RED, 1)
 
 
 def side_B_cycle():
-    # ambulance on B does not matter because camera only sees side A
-    # so ignore ambulance for B
+    # Side B has no ambulance detection (single camera)
     green = calculate_green_time(0, False)
 
     GPIO.output(B_GREEN, 1)
     GPIO.output(A_RED, 1)
+    GPIO.output(B_RED, 0)
 
     for t in reversed(range(green)):
         show_lcd("SIDE B", "GREEN", t)
         time.sleep(1)
 
     GPIO.output(B_GREEN, 0)
-    GPIO.output(B_YELLOW, 1)
-    show_lcd("SIDE B", "YELLOW", 3)
-    time.sleep(3)
-    GPIO.output(B_YELLOW, 0)
     GPIO.output(B_RED, 1)
 
 
