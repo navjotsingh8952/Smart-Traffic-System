@@ -3,6 +3,7 @@
 
 from RPLCD.i2c import CharLCD
 
+
 class LCD:
     def __init__(self):
         # Adjust address and cols/rows according to your LCD
