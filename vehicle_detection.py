@@ -44,11 +44,15 @@ def get_counts(cap):
             if class_name in VEHICLE_CLASSES:  # FIXED
                 vehicle_count += 1
 
+    r = results[0]
+    annotated = r.plot()
+    cv2.imshow("Webcam Detection", annotated)
     print(f"Vehicle: {vehicle_count}, Ambulance: {ambulance}")
 
     # append to file
     log_output(vehicle_count, ambulance)
-
+    if cv2.waitKey(1) & 0xFF == ord('q'):
+        print("Exiting...")
     return vehicle_count, ambulance
 
 
