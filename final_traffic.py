@@ -9,10 +9,9 @@ from ultralytics import YOLO
 GPIO.setmode(GPIO.BCM)
 
 # ---------- LED PINS ----------
-A_RED, A_GREEN = 2, 4
-B_RED, B_GREEN = 17, 22
+A_RED, A_GREEN = 20, 21
 
-for p in [A_RED, A_GREEN, B_RED, B_GREEN]:
+for p in [A_RED, A_GREEN]:
     GPIO.setup(p, GPIO.OUT)
     GPIO.output(p, 0)
 
@@ -79,7 +78,6 @@ def side_A_cycle(cap):
     green = calculate_green_time(car_count, ambulance)
 
     GPIO.output(A_GREEN, 1)
-    GPIO.output(B_RED, 1)
     GPIO.output(A_RED, 0)
 
     for t in reversed(range(green)):
@@ -94,16 +92,11 @@ def side_B_cycle():
     # Side B has no ambulance detection (single camera)
     green = calculate_green_time(0, False)
 
-    GPIO.output(B_GREEN, 1)
     GPIO.output(A_RED, 1)
-    GPIO.output(B_RED, 0)
 
     for t in reversed(range(green)):
         show_lcd("SIDE B", "GREEN", t)
         time.sleep(1)
-
-    GPIO.output(B_GREEN, 0)
-    GPIO.output(B_RED, 1)
 
 
 if __name__ == "__main__":
