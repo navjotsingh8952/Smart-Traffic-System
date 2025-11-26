@@ -24,14 +24,14 @@ def show_lcd(side, color, sec):
     print(f"{side}: {color}, Timer: {sec:02d}s")
 
 
-def calculate_green_time(car_count, ambulance):
+def calculate_green_time(vehicle_count, ambulance):
     if ambulance:
         print("🚨 Ambulance detected → Giving priority!")
         return 20 + 20  # normal 20 + extra 20
 
-    if car_count < 5:
+    if vehicle_count < 5:
         return 20
-    elif car_count < 15:
+    elif vehicle_count < 15:
         return 35
     else:
         return 50
@@ -70,8 +70,9 @@ def get_counts():
 
 
 def side_A_cycle():
-    car_count, ambulance = get_counts()
-    green = calculate_green_time(car_count, ambulance)
+    vehicle_count, ambulance = get_counts()
+    print(f"Vehicle: {vehicle_count}, Ambulance: {ambulance}")
+    green = calculate_green_time(vehicle_count, ambulance)
 
     GPIO.output(A_GREEN, 1)
     GPIO.output(A_RED, 0)
