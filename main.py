@@ -1,6 +1,7 @@
 # test_images_batch.py
 import sys
 from pathlib import Path
+
 import cv2
 from ultralytics import YOLO
 
@@ -8,6 +9,8 @@ from ultralytics import YOLO
 MODEL_PATH = r"best.pt"
 OUT_DIR = r"batch_results"
 CONF = 0.45
+
+
 # ---------- END CONFIG ----------
 
 def process_image_folder(model, input_dir):
@@ -41,8 +44,8 @@ def process_camera(model, cam_id):
     if not cap.isOpened():
         print("❌ Could not open webcam:", cam_id)
         return
-    frame_count = 0
 
+    frame_count = 0
     while True:
         ret, frame = cap.read()
         if not ret:
