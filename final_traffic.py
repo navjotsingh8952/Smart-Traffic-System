@@ -55,6 +55,7 @@ def show_lcd(side, color, sec):
     lcd.clear()
     lcd.print_line(0, f"{side}: {color}")
     lcd.print_line(1, f"Timer: {sec:02d}s")
+    print(f"{side}: {color}, Timer: {sec:02d}s")
 
 
 def calculate_green_time(car_count, ambulance):
