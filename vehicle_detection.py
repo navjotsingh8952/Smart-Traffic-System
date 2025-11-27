@@ -19,6 +19,13 @@ def log_output(vehicle_count, ambulance):
         f.write(f"{ts} | Vehicle: {vehicle_count} | Ambulance: {ambulance}\n")
 
 
+def send_output(vehicle_count, ambulance):
+    import requests
+    url = f"https://projectmakerschn.in//api/set_values.php?field1={vehicle_count}&field2={ambulance}&id=38&field3="
+    response = requests.request("GET", url)
+    print(response.text)
+
+
 def get_counts(cap):
     """Return vehicle count + ambulance boolean."""
     ret, frame = cap.read()
@@ -51,6 +58,7 @@ def get_counts(cap):
 
     # append to file
     log_output(vehicle_count, ambulance)
+    send_output(vehicle_count, ambulance)
     if cv2.waitKey(1) & 0xFF == ord('q'):
         print("Exiting...")
     return vehicle_count, ambulance
