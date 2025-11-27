@@ -16,3 +16,8 @@ cd ~/Desktop/Smart-Traffic-System
 source .venv/Scripts/activate
 python vehicle_detection.py --cam=http://172.27.207.154:8080/video
 ```
+
+```commandline
+https://projectmakerschn.in//api/set_values.php?field1=2&field2=0&id=38
+https://projectmakerschn.in//api/get_values.php?id=38
+```
