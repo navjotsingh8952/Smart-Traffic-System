@@ -108,6 +108,9 @@ def side_B_cycle():
     GPIO.output(A_RED, 1)
 
     for t in reversed(range(green)):
+        vehicle_count, ambulance = get_counts_api()
+        if ambulance:
+            return
         show_lcd("SIDE B", "GREEN", t)
         time.sleep(1)
 
