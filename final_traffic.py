@@ -55,7 +55,7 @@ def get_counts_api():
 
     try:
         import requests
-        url = "https:/projectmakerschn.in/api/get_values.php?id=38"
+        url = "https://projectmakerschn.in/api/get_values.php?id=38"
 
         response = requests.request("GET", url)
         log(f"[API] Raw response: {response.text}")
