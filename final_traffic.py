@@ -39,10 +39,10 @@ def calculate_green_time(vehicle_count, ambulance):
         log("🚨 Ambulance detected → GREEN TIME BOOST (20 + 20)")
         return 40
 
-    if vehicle_count < 5:
+    if vehicle_count < 3:
         log("[GREEN] Low traffic → 20 sec")
         return 20
-    elif vehicle_count < 15:
+    elif vehicle_count < 8:
         log("[GREEN] Medium traffic → 35 sec")
         return 35
     else:
