@@ -25,7 +25,7 @@ def get_counts(cap):
     if not ret:
         return 0, False
 
-    results = model.predict(frame, conf=CONF)
+    results = model.predict(frame, conf=CONF, device="cpu")
 
     vehicle_count = 0
     ambulance = False
