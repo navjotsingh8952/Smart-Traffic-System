@@ -21,7 +21,7 @@ def log_output(vehicle_count, ambulance):
 
 def send_output(vehicle_count, ambulance):
     import requests
-    url = f"https:/projectmakerschn.in/api/set_values.php?field1={vehicle_count}&field2={ambulance}&id=38&field3="
+    url = f"https://projectmakerschn.in/api/set_values.php?field1={vehicle_count}&field2={ambulance}&id=38&field3="
     response = requests.request("GET", url)
     print(response.text)
 
