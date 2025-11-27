@@ -4,6 +4,7 @@ Open 2 cmd prompt and put below commands
 GiTBash in laptop for connecting to rasp pi
 
 ```commandline
+ssh capstone@<rasp_ip>
 cd ~/SmartTrafficLight/Smart-Traffic-System
 source .venv/bin/activate
 python final_traffic.py
