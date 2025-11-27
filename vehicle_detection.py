@@ -39,7 +39,7 @@ def get_counts(cap):
 
     for r in results:
         for box in r.boxes:
-            if float(box.conf) < 0.7:
+            if float(box.conf) < 0.48:
                 continue
 
             cls_id = int(box.cls)
