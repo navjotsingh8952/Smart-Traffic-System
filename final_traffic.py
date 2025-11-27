@@ -69,8 +69,24 @@ def get_counts():
         return 0, False
 
 
+def get_counts_api():
+    try:
+        import requests
+
+        url = "https://projectmakerschn.in//api/get_values.php?id=38"
+
+        response = requests.request("GET", url)
+
+        print(response.text)
+        data = response.json()
+        return int(data["field1"], data["field2"] == "True")
+
+    except Exception:
+        return 0, False
+
+
 def side_A_cycle():
-    vehicle_count, ambulance = get_counts()
+    vehicle_count, ambulance = get_counts_api()
     print(f"Vehicle: {vehicle_count}, Ambulance: {ambulance}")
     green = calculate_green_time(vehicle_count, ambulance)
 
