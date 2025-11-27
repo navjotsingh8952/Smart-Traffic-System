@@ -79,7 +79,7 @@ def get_counts_api():
 
         print(response.text)
         data = response.json()
-        return int(data["field1"], data["field2"] == "True")
+        return int(data["field1"]), data["field2"] == "True"
 
     except Exception:
         return 0, False
